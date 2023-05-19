@@ -11,9 +11,8 @@ logging.basicConfig(format=FORMAT)
 
 fake = Faker()
 n = 100
-ip_addresses = [fake.ipv4() for _ in range(n)]
+log_entries = [{'clientip': fake.ipv4(), 'user': fake.user_name()} for _ in range(n)]
 
-for ip_address in ip_addresses:
-    d = {'clientip': ip_address, 'user': 'fbloggs'}
+for log_entry in log_entries:
     logger = logging.getLogger('tcpserver')
-    logger.warning('Protocol problem: %s', 'connection reset', extra=d)
+    logger.warning('User name with IP Address', extra=log_entry)
