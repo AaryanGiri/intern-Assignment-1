@@ -4,7 +4,7 @@ import string
 from faker import Faker
 
 FORMAT = '%(asctime)s %(service)s host=%(host)s p=%(payload)s l=%(latency)s s=%(status)s API=[%(api)s] ' \
-         'Q=/message/scan/id=messagehash%(message)sreqid=hash%(requestId)s CL=%(CPUlatency)s ec=[%(error_code1)s] ' \
+         'Q=/message/scan/id=messagehash%(mes)s reqId=hash%(requestId)s CL=%(CPUlatency)s ec=[%(error_code1)s] ' \
          'EC2=%(error_code2)s exception=%(exception)s  f=%(clientip)-15s '
 logging.basicConfig(format=FORMAT)
 
@@ -35,7 +35,7 @@ log_entries = [{'service': 'service=imap',
                 'latency': fake.pyint(1, 100), # range from 1 to 99
                 'status': random.choice(status_codes),
                 'api': fake.word(),
-                'message': ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)),
+                'mes': ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)),
                 'requestId': ''.join(random.choices(string.ascii_lowercase + string.digits, k=13)),
                 'CPUlatency': fake.pyint(1, 100),
                 'error_code1': fake.word(),
