@@ -4,8 +4,8 @@ import string
 from faker import Faker
 
 FORMAT = '%(asctime)s %(service)s host=%(host)s p=%(payload)s l=%(latency)s s=%(status)s API=[%(api)s] ' \
-         'Q=/message/scan/id=messagehash%(mes)s reqId=hash%(requestId)s CL=%(CPUlatency)s ec=[%(error_code1)s] ' \
-         'EC2=%(error_code2)s exception=%(exception)s  f=%(clientip)-15s '
+         'Q=/message/%(act)s/id=messagehash%(mes)sreqId=hash%(requestId)s CL=%(CPUlatency)s ec=[%(error_code1)s] ' \
+         'EC2=%(error_code2)s exception=%(exception)s f=%(clientip)-15s '
 logging.basicConfig(format=FORMAT)
 
 status_codes = [
@@ -26,6 +26,13 @@ status_codes = [
     # 5xx - Server Errors
     500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511
 ]
+error1 = ["invalidmailbox","missingmailbox", "nonexistentmailbox", "unknownmailbox", "mailboxnotfound", "mailboxerror"]
+
+error2 = ["bad filler", "corrupt file", "missing file", "inaccessible file", "permission denied"]
+
+action = ["retrieve", "send", "delete", "forward", "reply", "move", "mark_read", "mark_unread", "scan"]
+
+exceptionList = ["invalid encoding", "unsupported encoding", "encoding failure", "character encoding error", "encoding format mismatch", "bad encoding"]
 
 fake = Faker()
 n = 100
@@ -38,11 +45,12 @@ log_entries = [{'service': 'service=imap',
                 'mes': ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)),
                 'requestId': ''.join(random.choices(string.ascii_lowercase + string.digits, k=13)),
                 'CPUlatency': fake.pyint(1, 100),
-                'error_code1': fake.word(),
-                'error_code2': fake.word(),
-                'exception': fake.word(),
-                'clientip': fake.ipv4()} for _ in range(n)]
+                'error_code1': random.choice(error1),
+                'error_code2': random.choice(error2),
+                'exception': random.choice(exceptionList),
+                'clientip': fake.ipv4(),
+                'act': random.choice(action)} for _ in range(n)]
 
 for log_entry in log_entries:
     logger = logging.getLogger('tcpserver')
-    logger.warning('User name with IP Address', extra=log_entry)
+    logger.warning('', extra=log_entry)
